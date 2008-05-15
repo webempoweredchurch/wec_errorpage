@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'wec_errorpage'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="sys_domain.tx_wecerrorpage_404page">404 Error Page</label>
+			<label index="sys_domain.tx_wecerrorpage_503page">503 Error Page</label>
+		</languageKey>
+	</data>
+</T3locallang>
