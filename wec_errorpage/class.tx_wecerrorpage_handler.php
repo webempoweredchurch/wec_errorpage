@@ -26,12 +26,34 @@
 *
 * This copyright notice MUST APPEAR in all copies of the file!
 ***************************************************************/
+require_once(PATH_tslib.'class.tslib_content.php');
 
 class tx_wecerrorpage_handler {
 
 	function pageNotFound($params, $ref) {
+		// TODO: debug
+		t3lib_div::debug($params);
 
-		return "Hello!";
+		
+		$local_cObj = t3lib_div::makeInstance('tslib_cObj'); // Local cObj.
+		$local_cObj->start(null, 'sys_domain');
+		
+		
+		// get request domain
+		$requestDomain = t3lib_div::getIndpEnv('HTTP_HOST');
+		
+		// get domain record that corresponds to this domain
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'sys_domain', 'domainName="'.$requestDomain.'"','','',1);
+		
+		$page404 = $res[0]['tx_wecerrorpage_404page'];
+
+		$bla = $local_cObj->getTypoLink_URL($page404);
+		
+		// TODO: debug
+		t3lib_div::debug($bla);
+		// TODO: debug
+		t3lib_div::debug($res);
+		
 	}
 }
 
