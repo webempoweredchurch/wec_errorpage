@@ -1,0 +1,2 @@
+# cat=basic; type=input; label=Default or fallback page not found handling
+defaultUrl = /notfound/

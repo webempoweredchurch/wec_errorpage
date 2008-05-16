@@ -32,23 +32,27 @@ class tx_wecerrorpage_handler {
 
 	function pageNotFound($params, $ref) {
 
-		$this->initializeFrontend(61);
-		$local_cObj = t3lib_div::makeInstance('tslib_cObj'); // Local cObj.
-		$local_cObj->start(null, 'sys_domain');
-		
-		
 		// get request domain
 		$requestDomain = t3lib_div::getIndpEnv('HTTP_HOST');
 		
 		// get domain record that corresponds to this domain
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'sys_domain', 'domainName="'.$requestDomain.'"','','',1);
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'sys_domain', 'domainName="'.$requestDomain.' AND hidden=0"','','',1);
 		
-		$page404 = $res[0]['tx_wecerrorpage_404page'];
+		if(empty($res)) {
+			$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_errorpage']);
+			$page404 = $conf['defaultUrl'];
+		} else {
+			$page404 = $res[0]['tx_wecerrorpage_404page'];
+		}
 
-
+		$this->initializeFrontend();//$res[0]['pid']);
+		
+		$local_cObj = t3lib_div::makeInstance('tslib_cObj'); // Local cObj.
+		$local_cObj->start(null, 'sys_domain');
+		
 		$code = $local_cObj->getTypoLink_URL($page404);
-
-       // Check if URL is relative
+		
+		       // Check if URL is relative
 		$url_parts = parse_url($code);
 		if ($url_parts['host'] == '')    {
 		    $url_parts['host'] = t3lib_div::getIndpEnv('HTTP_HOST');
@@ -63,7 +67,7 @@ class tx_wecerrorpage_handler {
 		return $content;
 	}
 	
-	function initializeFrontend($pid, $feUserObj=''){
+	function initializeFrontend($pid = '', $feUserObj=''){
 	        define('PATH_tslib', PATH_site.'typo3/sysext/cms/tslib/');
 	        require_once (PATH_tslib.'/class.tslib_content.php');
 	        require_once(t3lib_extMgm::extPath('wec_assessment').'backend/class.tx_wecassessment_tsfe.php');
