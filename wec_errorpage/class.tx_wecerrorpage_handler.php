@@ -55,6 +55,9 @@ class tx_wecerrorpage_handler {
 		       // Check if URL is relative
 		$url_parts = parse_url($code);
 		if ($url_parts['host'] == '')    {
+			if(substr($code,0,1) == '/') {
+				$code = substr($code,1);
+			}
 			$code = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $code;
 		} 
 
