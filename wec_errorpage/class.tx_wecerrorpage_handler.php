@@ -38,7 +38,7 @@ class tx_wecerrorpage_handler {
 		// get domain record that corresponds to this domain
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'sys_domain', 'domainName="'.$requestDomain.' AND hidden=0"','','',1);
 		
-		if(empty($res)) {
+		if(empty($res) || empty($res[0]['tx_wecerrorpage_404page'])) {
 			$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_errorpage']);
 			$page404 = $conf['defaultUrl'];
 		} else {
@@ -55,12 +55,8 @@ class tx_wecerrorpage_handler {
 		       // Check if URL is relative
 		$url_parts = parse_url($code);
 		if ($url_parts['host'] == '')    {
-		    $url_parts['host'] = t3lib_div::getIndpEnv('HTTP_HOST');
-		    $code = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $code;
-		    $checkBaseTag = false;
-		} else {
-		    $checkBaseTag = true;
-		}
+			$code = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $code;
+		} 
 
 		$content = t3lib_div::getUrl($code);
 		
