@@ -38,7 +38,7 @@ class tx_wecerrorpage_handler {
 		// get domain record that corresponds to this domain
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'sys_domain', 'domainName="'.$requestDomain.'" AND hidden=0','','',1);
 
-		$ref->pageErrorHandler($this->processUrl($res, 'tx_wecerrorpage_404page'));
+		$ref->pageErrorHandler($this->processUrl($res, 'tx_wecerrorpage_404page', 'pageNotFound_handling'));
 	}
 	
 	function pageNotAvailable($params, $ref) {
@@ -49,19 +49,21 @@ class tx_wecerrorpage_handler {
 		// get domain record that corresponds to this domain
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'sys_domain', 'domainName="'.$requestDomain.'" AND hidden=0','','',1);
 		
-		$ref->pageErrorHandler($this->processUrl($res, 'tx_wecerrorpage_503page'));
+		$ref->pageErrorHandler($this->processUrl($res, 'tx_wecerrorpage_503page', 'pageUnavailable_handling'));
 	}
 	
-	function processUrl($res, $field) {
+	function processUrl($res, $field, $extconfFallback) {
 		
 		// if there is no domain record, or no special 404 handling set, fall back to default
 		if(empty($res) || empty($res[0][$field])) {
 			$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_errorpage']);
-			$url = $conf['defaultUrl'];
+			$url = $conf[$extconfFallback];
 		} else {
 			$url = $res[0][$field];
 		}
 
+		if(is_bool($url)) return $url;
+		
 		// now we check for REDIRECT or READFILE prefix.
 		if(strpos($url, 'READFILE:') === 0 || strpos($url, 'REDIRECT:') === 0 || strpos($url, 'USER_FUNC:') === 0) {
 			return $url;
