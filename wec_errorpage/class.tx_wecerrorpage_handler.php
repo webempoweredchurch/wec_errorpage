@@ -76,7 +76,15 @@ class tx_wecerrorpage_handler {
 			// devlog end
 		}
 
-		if(is_bool($url)) return $url;
+		if(is_bool($url)) {
+			// TODO: devlog start
+			if(TYPO3_DLOG) {
+				t3lib_div::devLog('Value is a boolean, passing directly to error handler', 'wec_errorpage');
+			}
+			// devlog end
+			return $url;			
+		}
+
 		
 		// now we check for REDIRECT or READFILE prefix.
 		if(strpos($url, 'READFILE:') === 0 || strpos($url, 'REDIRECT:') === 0 || strpos($url, 'USER_FUNC:') === 0) {
