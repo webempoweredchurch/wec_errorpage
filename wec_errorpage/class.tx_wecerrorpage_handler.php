@@ -37,40 +37,56 @@ class tx_wecerrorpage_handler {
 
 		// get domain record that corresponds to this domain
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'sys_domain', 'domainName="'.$requestDomain.'" AND hidden=0','','',1);
+
+		$ref->pageErrorHandler($this->processUrl($res, 'tx_wecerrorpage_404page'));
+	}
+	
+	function pageNotAvailable($params, $ref) {
+
+		// get request domain
+		$requestDomain = t3lib_div::getIndpEnv('HTTP_HOST');
+
+		// get domain record that corresponds to this domain
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'sys_domain', 'domainName="'.$requestDomain.'" AND hidden=0','','',1);
 		
-		// // if there is no domain record, or no special 404 handling set, fall back to default
-		// if(empty($res) || empty($res[0]['tx_wecerrorpage_404page'])) {
-		// 	$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_errorpage']);
-		// 	$page404 = $conf['defaultUrl'];
-		// } else {
-		// 	$page404 = $res[0]['tx_wecerrorpage_404page'];
-		// }
-		// 
+		$ref->pageErrorHandler($this->processUrl($res, 'tx_wecerrorpage_503page'));
+	}
+	
+	function processUrl($res, $field) {
+		
+		// if there is no domain record, or no special 404 handling set, fall back to default
+		if(empty($res) || empty($res[0][$field])) {
+			$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_errorpage']);
+			$url = $conf['defaultUrl'];
+		} else {
+			$url = $res[0][$field];
+		}
+
+		// now we check for REDIRECT or READFILE prefix.
+		if(strpos($url, 'READFILE:') === 0 || strpos($url, 'REDIRECT:') === 0 || strpos($url, 'USER_FUNC:') === 0) {
+			return $url;
+		}
+		
+		// now we pass it through typolink and process from there
+		
 		// initialize a fake front end
 		$this->initializeFrontend();
-		// 
+
 		// create a cObj for the typolink method
 		$local_cObj = t3lib_div::makeInstance('tslib_cObj'); // Local cObj.
 		$local_cObj->start(null, 'sys_domain');
-		
+
 		// pass our url through typolink to get a proper url
-		$code = $local_cObj->getTypoLink_URL($res[0]['tx_wecerrorpage_404page']);
-		// 
-		//        // Check if URL is relative
-		// $url_parts = parse_url($code);
-		// if ($url_parts['host'] == '')    {
-		// 
-		// 	// leading / may break things, so remove it if we find it
-		// 	if(substr($code,0,1) == '/') {
-		// 		$code = substr($code,1);
-		// 	}
-		// 	$code = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $code;
-		// } 
-		// TODO: debug
-		t3lib_div::debug($code, 'code');
-		// TODO: debug
-		t3lib_div::debug(parse_url($code), 'parsed');
-		$ref->pageErrorHandler('/ewrewrwe/');
+		$code = $local_cObj->getTypoLink_URL($url);
+		
+		if(empty($code)) return null;
+		
+		$parsed = parse_url($code);
+		
+		if (substr($code,0,1)!='/' AND empty($parsed['scheme'])) $code = '/'.$code;
+		if (substr($code,-1)!='/' AND !empty($parsed['scheme'])) $code.='/';
+
+		return $code;	
 	}
 	
 	function initializeFrontend($pid = '', $feUserObj=''){
