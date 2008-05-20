@@ -38,12 +38,72 @@ class tx_wecerrorpage_handler {
 		// get domain record that corresponds to this domain
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'sys_domain', 'domainName="'.$requestDomain.'" AND hidden=0','','',1);
 		
-		$code = $res[0]['tx_wecerrorpage_404page'];
-		// read the given page and return it to the user
-		// $content = t3lib_div::getUrl($code);
+		// // if there is no domain record, or no special 404 handling set, fall back to default
+		// if(empty($res) || empty($res[0]['tx_wecerrorpage_404page'])) {
+		// 	$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_errorpage']);
+		// 	$page404 = $conf['defaultUrl'];
+		// } else {
+		// 	$page404 = $res[0]['tx_wecerrorpage_404page'];
+		// }
+		// 
+		// initialize a fake front end
+		$this->initializeFrontend();
+		// 
+		// create a cObj for the typolink method
+		$local_cObj = t3lib_div::makeInstance('tslib_cObj'); // Local cObj.
+		$local_cObj->start(null, 'sys_domain');
+		
+		// pass our url through typolink to get a proper url
+		$code = $local_cObj->getTypoLink_URL($res[0]['tx_wecerrorpage_404page']);
+		// 
+		//        // Check if URL is relative
+		// $url_parts = parse_url($code);
+		// if ($url_parts['host'] == '')    {
+		// 
+		// 	// leading / may break things, so remove it if we find it
+		// 	if(substr($code,0,1) == '/') {
+		// 		$code = substr($code,1);
+		// 	}
+		// 	$code = t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $code;
+		// } 
+		// TODO: debug
+		t3lib_div::debug($code, 'code');
+		// TODO: debug
+		t3lib_div::debug(parse_url($code), 'parsed');
+		$ref->pageErrorHandler('/ewrewrwe/');
+	}
+	
+	function initializeFrontend($pid = '', $feUserObj=''){
+	        define('PATH_tslib', PATH_site.'typo3/sysext/cms/tslib/');
+	        require_once (PATH_tslib.'/class.tslib_content.php');
+	        require_once(t3lib_extMgm::extPath('wec_assessment').'backend/class.tx_wecassessment_tsfe.php');
+	        require_once(PATH_t3lib.'class.t3lib_userauth.php');
+	        require_once(PATH_tslib.'class.tslib_feuserauth.php');
+	        require_once(PATH_t3lib.'class.t3lib_befunc.php');
+	        require_once(PATH_t3lib.'class.t3lib_timetrack.php');
+	        require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
+	        require_once(PATH_t3lib.'class.t3lib_page.php');
 
-		$ref->pageErrorHandler($code);
-		// echo $content;
+	        $GLOBALS['TT'] = new t3lib_timeTrack;
+
+	        // ***********************************
+	        // Creating a fake $TSFE object
+	        // ***********************************
+	        $TSFEclassName = t3lib_div::makeInstanceClassName('tx_wecassessment_tsfe');
+	        $GLOBALS['TSFE'] = new $TSFEclassName($GLOBALS['TYPO3_CONF_VARS'], $pid, '0', 1, '', '','','');
+	        $GLOBALS['TSFE']->connectToMySQL();
+	        if($feUserObj==''){
+	                $GLOBALS['TSFE']->initFEuser();
+	        }else{
+	                $GLOBALS['TSFE']->fe_user = &$feUserObj;
+	        }
+
+	        $GLOBALS['TSFE']->fetch_the_id();
+	        $GLOBALS['TSFE']->getPageAndRootline();
+	        $GLOBALS['TSFE']->initTemplate();
+	        $GLOBALS['TSFE']->tmpl->getFileName_backPath = PATH_site;
+	        $GLOBALS['TSFE']->forceTemplateParsing = 1;
+	        $GLOBALS['TSFE']->getConfigArray();
 	}
 }
 
