@@ -145,36 +145,36 @@ class tx_wecerrorpage_handler {
 	}
 	
 	function initializeFrontend($pid = '', $feUserObj=''){
-	        define('PATH_tslib', PATH_site.'typo3/sysext/cms/tslib/');
-	        require_once (PATH_tslib.'/class.tslib_content.php');
-	        require_once(t3lib_extMgm::extPath('wec_assessment').'backend/class.tx_wecassessment_tsfe.php');
-	        require_once(PATH_t3lib.'class.t3lib_userauth.php');
-	        require_once(PATH_tslib.'class.tslib_feuserauth.php');
-	        require_once(PATH_t3lib.'class.t3lib_befunc.php');
-	        require_once(PATH_t3lib.'class.t3lib_timetrack.php');
-	        require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
-	        require_once(PATH_t3lib.'class.t3lib_page.php');
+			define('PATH_tslib', PATH_site.'typo3/sysext/cms/tslib/');
+			require_once(PATH_tslib.'/class.tslib_content.php');
+			require_once(PATH_tslib.'class.tslib_fe.php');
+			require_once(PATH_t3lib.'class.t3lib_userauth.php');
+			require_once(PATH_tslib.'class.tslib_feuserauth.php');
+			require_once(PATH_t3lib.'class.t3lib_befunc.php');
+			require_once(PATH_t3lib.'class.t3lib_timetrack.php');
+			require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
+			require_once(PATH_t3lib.'class.t3lib_page.php');
 
-	        $GLOBALS['TT'] = new t3lib_timeTrack;
+			$GLOBALS['TT'] = new t3lib_timeTrack;
 
-	        // ***********************************
-	        // Creating a fake $TSFE object
-	        // ***********************************
-	        $TSFEclassName = t3lib_div::makeInstanceClassName('tx_wecassessment_tsfe');
-	        $GLOBALS['TSFE'] = new $TSFEclassName($GLOBALS['TYPO3_CONF_VARS'], $pid, '0', 1, '', '','','');
-	        $GLOBALS['TSFE']->connectToMySQL();
-	        if($feUserObj==''){
-	                $GLOBALS['TSFE']->initFEuser();
-	        }else{
-	                $GLOBALS['TSFE']->fe_user = &$feUserObj;
-	        }
+			// ***********************************
+			// Creating a fake $TSFE object
+			// ***********************************
+			$TSFEclassName = t3lib_div::makeInstanceClassName('tslib_fe');
+			$GLOBALS['TSFE'] = new $TSFEclassName($GLOBALS['TYPO3_CONF_VARS'], $pid, '0', 1, '', '','','');
+			$GLOBALS['TSFE']->connectToMySQL();
+			if($feUserObj==''){
+					$GLOBALS['TSFE']->initFEuser();
+			}else{
+					$GLOBALS['TSFE']->fe_user = &$feUserObj;
+			}
 
-	        $GLOBALS['TSFE']->fetch_the_id();
-	        $GLOBALS['TSFE']->getPageAndRootline();
-	        $GLOBALS['TSFE']->initTemplate();
-	        $GLOBALS['TSFE']->tmpl->getFileName_backPath = PATH_site;
-	        $GLOBALS['TSFE']->forceTemplateParsing = 1;
-	        $GLOBALS['TSFE']->getConfigArray();
+			$GLOBALS['TSFE']->fetch_the_id();
+			$GLOBALS['TSFE']->getPageAndRootline();
+			$GLOBALS['TSFE']->initTemplate();
+			$GLOBALS['TSFE']->tmpl->getFileName_backPath = PATH_site;
+			$GLOBALS['TSFE']->forceTemplateParsing = 1;
+			$GLOBALS['TSFE']->getConfigArray();
 	}
 }
 
