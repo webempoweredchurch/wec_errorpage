@@ -1,5 +1,5 @@
 # cat=basic; type=input; label=Default or fallback page not found handling
-pageNotFound_handling = /notfound/
+pageNotFound_handling = false
 
 # cat=basic; type=input; label=Default or fallback page unavailable handling
 pageUnvailable_handling = false
