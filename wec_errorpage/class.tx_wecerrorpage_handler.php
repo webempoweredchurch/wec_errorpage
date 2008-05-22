@@ -135,6 +135,17 @@ class tx_wecerrorpage_handler {
 			// devlog end
 		}
 		
+		// workaround to make TYPO3 installs in subdirectories work
+		// TODO: Fix this once TYPO3 behavior changes
+		if(empty($parsed['scheme'])) {
+			$code = substr(t3lib_div::getIndpEnv('TYPO3_SITE_URL'),0,-1).$code;
+			// TODO: devlog start
+			if(TYPO3_DLOG) {
+				t3lib_div::devLog('Relative URL, transforming to absolute URL: '.$code, 'wec_errorpage');
+			}
+			// devlog end
+		}
+		
 		// TODO: devlog start
 		if(TYPO3_DLOG) {
 			t3lib_div::devLog('Final URL passed to error handler: '.$code, 'wec_errorpage');
