@@ -53,7 +53,7 @@ class tx_wecerrorpage_handler {
 	}
 	
 	function processUrl($res, $field, $extconfFallback) {
-		// TODO: devlog start
+		// devlog start
 		if(TYPO3_DLOG) {
 			t3lib_div::devLog('Starting error handling using field '.$field, 'wec_errorpage');
 		}
@@ -62,33 +62,33 @@ class tx_wecerrorpage_handler {
 		if(empty($res) || empty($res[0][$field])) {
 			$conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_errorpage']);
 			$url = $conf[$extconfFallback];
-			// TODO: devlog start
+			// devlog start
 			if(TYPO3_DLOG) {
 				t3lib_div::devLog('No domain specific setting, falling back to ext conf. Value: '.$url, 'wec_errorpage');
 			}
 			// devlog end
 		} else {
 			$url = $res[0][$field];
-			// TODO: devlog start
+			// devlog start
 			if(TYPO3_DLOG) {
 				t3lib_div::devLog('Using domain setting for domain "'.$res[0]['domainName'].'". Value: '.$url, 'wec_errorpage');
 			}
 			// devlog end
 		}
 
-		if(is_bool($url)) {
-			// TODO: devlog start
+		if($this->is_bool($url)) {
+			// devlog start
 			if(TYPO3_DLOG) {
 				t3lib_div::devLog('Value is a boolean, passing directly to error handler', 'wec_errorpage');
 			}
 			// devlog end
-			return $url;			
+			return $this->make_bool($url);
 		}
 
 		
 		// now we check for REDIRECT or READFILE prefix.
 		if(strpos($url, 'READFILE:') === 0 || strpos($url, 'REDIRECT:') === 0 || strpos($url, 'USER_FUNC:') === 0) {
-			// TODO: devlog start
+			// devlog start
 			if(TYPO3_DLOG) {
 				t3lib_div::devLog('Found prefix, passing directly to error handler. URL: '.$url, 'wec_errorpage');
 			}
@@ -107,7 +107,7 @@ class tx_wecerrorpage_handler {
 
 		// pass our url through typolink to get a proper url
 		$code = $local_cObj->getTypoLink_URL($url);
-		// TODO: devlog start
+		// devlog start
 		if(TYPO3_DLOG) {
 			t3lib_div::devLog('Passed through typolink. Result: '.$code, 'wec_errorpage');
 		}
@@ -119,7 +119,7 @@ class tx_wecerrorpage_handler {
 		
 		if (substr($code,0,1)!='/' AND empty($parsed['scheme'])) {
 			$code = '/'.$code;	
-			// TODO: devlog start
+			// devlog start
 			if(TYPO3_DLOG) {
 				t3lib_div::devLog('Relative URL and missing leading slash; adding. URL: '.$code, 'wec_errorpage');
 			}
@@ -128,7 +128,7 @@ class tx_wecerrorpage_handler {
 
 		if (substr($code,-1)!='/' AND !empty($parsed['scheme'])) {
 			$code.='/';
-			// TODO: devlog start
+			// devlog start
 			if(TYPO3_DLOG) {
 				t3lib_div::devLog('Absolute URL but no trailing slash; adding. URL: '.$code, 'wec_errorpage');
 			}
@@ -139,20 +139,36 @@ class tx_wecerrorpage_handler {
 		// TODO: Fix this once TYPO3 behavior changes
 		if(empty($parsed['scheme'])) {
 			$code = substr(t3lib_div::getIndpEnv('TYPO3_SITE_URL'),0,-1).$code;
-			// TODO: devlog start
+			// devlog start
 			if(TYPO3_DLOG) {
 				t3lib_div::devLog('Relative URL, transforming to absolute URL: '.$code, 'wec_errorpage');
 			}
 			// devlog end
 		}
 		
-		// TODO: devlog start
+		// devlog start
 		if(TYPO3_DLOG) {
 			t3lib_div::devLog('Final URL passed to error handler: '.$code, 'wec_errorpage');
 			t3lib_div::devLog('Finished error handling', 'wec_errorpage');
 		}
 		// devlog end
 		return $code;	
+	}
+	
+	function is_bool($var) {
+		if($var === "true" || $var === "false") {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	function make_bool($var) {
+		if($var === "true") {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	function initializeFrontend($pid = '', $feUserObj=''){
