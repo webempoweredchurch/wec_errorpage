@@ -5,7 +5,7 @@ $conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_errorpage
 if($conf['allowTYPO3Pages']) {
 	$blindLinkOptions = "folder,mail";
 } else {
-	$blindLinkOptions = "folder,mail,page";
+	$blindLinkOptions = "folder,mail,page,url";
 }
 
 $wizards = array(
