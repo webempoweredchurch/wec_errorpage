@@ -6,8 +6,8 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="sys_domain.tx_wecerrorpage_404page">404 Error Page</label>
-			<label index="sys_domain.tx_wecerrorpage_503page">503 Error Page</label>
+			<label index="sys_domain.tx_wecerrorpage_404page">Page Not Found Error Page</label>
+			<label index="sys_domain.tx_wecerrorpage_503page">Page Unavailable Error Page</label>
 		</languageKey>
 	</data>
 </T3locallang>
