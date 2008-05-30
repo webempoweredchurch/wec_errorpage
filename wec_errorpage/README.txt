@@ -1,5 +1,5 @@
 Purpose:
-This extension allows TYPO3 installations that support more than one domain to define page not found (404) and page unavailable (503) error handling on a per domain basis
+This extension allows TYPO3 installations that support more than one domain to define page not found (404) and page unavailable (503, TYPO3 4.2+ only) error handling on a per domain basis
 
 How?
 WEC Error Page extends TYPO3 domain records to include an input text field with a link wizard that can be used to select an external URL, an internal TYPO3 page, or a static file.
