@@ -1,3 +1,6 @@
+# cat=basic; type=boolean; label=Enable internal TYPO3 pages for error pages (slower!)
+allowTYPO3Pages = 
+
 # cat=basic; type=input; label=Default or fallback page not found handling
 pageNotFound_handling = false
 
