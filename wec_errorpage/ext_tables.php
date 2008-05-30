@@ -22,20 +22,21 @@ $wizards = array(
 	)
 );
 
+$tempColumns = array();
+$tempColumns['tx_wecerrorpage_404page'] = array(
+	"exclude" => 1,		
+	"label" => "LLL:EXT:wec_errorpage/locallang_db.xml:sys_domain.tx_wecerrorpage_404page",		
+	"config" => Array (
+		"type"     => "input",
+		"size"     => "15",
+		"max"      => "255",
+		"eval"     => "trim",
+		"wizards"  => $wizards
+	)
+);
 
-$tempColumns = Array (
-	"tx_wecerrorpage_404page" => Array (		
-		"exclude" => 1,		
-		"label" => "LLL:EXT:wec_errorpage/locallang_db.xml:sys_domain.tx_wecerrorpage_404page",		
-		"config" => Array (
-			"type"     => "input",
-			"size"     => "15",
-			"max"      => "255",
-			"eval"     => "trim",
-			"wizards"  => $wizards
-		)
-	),
-	"tx_wecerrorpage_503page" => Array (		
+if (t3lib_div::int_from_ver(TYPO3_version) >= 4002000) {
+	$tempColumns["tx_wecerrorpage_503page"] = array(		
 		"exclude" => 1,		
 		"label" => "LLL:EXT:wec_errorpage/locallang_db.xml:sys_domain.tx_wecerrorpage_503page",		
 		"config" => Array (
@@ -45,9 +46,8 @@ $tempColumns = Array (
 			"eval"     => "trim",
 			"wizards"  => $wizards
 		)
-	),
-);
-
+	);
+}
 
 t3lib_div::loadTCA("sys_domain");
 t3lib_extMgm::addTCAcolumns("sys_domain",$tempColumns,1);

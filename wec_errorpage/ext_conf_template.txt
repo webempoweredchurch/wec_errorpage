@@ -4,5 +4,5 @@ useTypolink =
 # cat=basic; type=input; label=Page Not Found Error Page: Default URL when no domain-specific configuration is available.
 pageNotFound_handling = false
 
-# cat=basic; type=input; label=Page Unavailable Error Page: Default URL when no domain-specific configuration is available.
+# cat=basic; type=input; label=Page Unavailable Error Page: Default URL when no domain-specific configuration is available (Requires TYPO3 4.2 and later).
 pageUnvailable_handling = false
