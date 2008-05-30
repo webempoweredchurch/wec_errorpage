@@ -79,7 +79,7 @@ class tx_wecerrorpage_handler {
 		}
 		
 		// if we can use internal TYPO3 pages, pass it through Typolink for processing
-		if($conf['allowTYPO3Pages']) {
+		if($conf['useTypolink']) {
 			// initialize a fake front end
 			$this->initializeFrontend();
 

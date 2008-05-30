@@ -2,7 +2,7 @@
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 
 $conf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_errorpage']);
-if($conf['allowTYPO3Pages']) {
+if($conf['useTypolink']) {
 	$blindLinkOptions = "folder,mail";
 } else {
 	$blindLinkOptions = "folder,mail,page,url";

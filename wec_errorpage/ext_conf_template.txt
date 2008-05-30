@@ -1,8 +1,8 @@
-# cat=basic; type=boolean; label=Enable internal TYPO3 pages for error pages (slower!)
-allowTYPO3Pages = 
+# cat=basic; type=boolean; label=Enable TYPO3 Link Processing: Slower but more user friendly
+useTypolink =
 
-# cat=basic; type=input; label=Default or fallback page not found handling
+# cat=basic; type=input; label=Page Not Found Error Page: Default URL when no domain-specific configuration is available.
 pageNotFound_handling = false
 
-# cat=basic; type=input; label=Default or fallback page unavailable handling
+# cat=basic; type=input; label=Page Unavailable Error Page: Default URL when no domain-specific configuration is available.
 pageUnvailable_handling = false
