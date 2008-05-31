@@ -8,4 +8,4 @@ Furthermore, the user can directly write into the input field using the very sam
 Using Typo3 Link Processing:
 In order to use most of the link wizard's features we need to process the input with typolink. This adds some overhead to our processing and results in a little slower page load. Disabling this setting in the Extension Manager also disables internal and external pages in the link wizard, but speeds up the page rendering. It's a trade off between user friendliness and performance.
 
-We recommend turning it off if the user is familiar with the Install Tool option and is able to write the configuration into the input field directly without using the wizard. 
+We recommend turning it off if the user is familiar with the Install Tool option and is able to write the configuration into the input field directly without using the wizard.
